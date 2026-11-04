@@ -6,7 +6,7 @@
   "templateVersion": "1.0.0",
   "publisher": "Demo Org",
   "description": "A demo plugin for trying out validator plugins: one check per finding status, a check that's off by default, and sample books that trigger each one.",
-  "repository": "https://github.com/demo-org/epub-validator-plugin-demo",
+  "repository": "https://github.com/epubknowledge/epub-validator-plugin-demo",
   "sidebar": { "label": "Plugin Demo", "icon": "sparkles" },
   "checks": [
     {
