@@ -1,0 +1,53 @@
+{
+  "apiVersion": 1,
+  "id": "demo-org.plugin-demo",
+  "name": "Plugin Demo",
+  "version": "1.0.0",
+  "templateVersion": "1.0.0",
+  "publisher": "Demo Org",
+  "description": "A demo plugin for trying out validator plugins: one check per finding status, a check that's off by default, and sample books that trigger each one.",
+  "repository": "https://github.com/demo-org/epub-validator-plugin-demo",
+  "sidebar": { "label": "Plugin Demo", "icon": "sparkles" },
+  "checks": [
+    {
+      "id": "demo-error-marker",
+      "name": "Demo error marker",
+      "description": "Reports an error wherever a file contains the text PLUGIN-DEMO-ERROR, so you can see how an error looks and rolls up.",
+      "severity": "error",
+      "enabled": true,
+      "createdAt": "2026-11-04"
+    },
+    {
+      "id": "todo-markers",
+      "name": "Leftover TODO markers",
+      "description": "Flags TODO, FIXME, and TK markers left in XHTML content, with the line they're on.",
+      "severity": "warning",
+      "enabled": true,
+      "createdAt": "2026-11-04"
+    },
+    {
+      "id": "cover-image",
+      "name": "Cover image declared",
+      "description": "Passes when a manifest item has properties=\"cover-image\", and warns when none does.",
+      "severity": "warning",
+      "enabled": true,
+      "createdAt": "2026-11-04"
+    },
+    {
+      "id": "run-summary",
+      "name": "Run summary",
+      "description": "Always reports one info line with what the plugin saw, so you can tell it ran.",
+      "severity": "info",
+      "enabled": true,
+      "createdAt": "2026-11-04"
+    },
+    {
+      "id": "word-count",
+      "name": "Word count per chapter",
+      "description": "Reports the word count of each document in the reading order. Off by default: switch it on to see a toggle at work.",
+      "severity": "info",
+      "enabled": false,
+      "createdAt": "2026-11-04"
+    }
+  ]
+}

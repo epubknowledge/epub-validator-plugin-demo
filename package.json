@@ -1,0 +1,19 @@
+{
+  "name": "@epub-knowledge/epub-validator-plugin-demo",
+  "version": "1.0.0",
+  "description": "A demo EPUB validator plugin for trying plugins out: one check per finding status, a check that's off by default, and sample books that trigger each one.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "samples": "node --experimental-strip-types scripts/build-sample-epubs.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@vitest/coverage-v8": "^4.1.11",
+    "typescript": "5.9.3",
+    "vitest": "^4.1.11"
+  },
+  "packageManager": "pnpm@12.6.0"
+}

@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to release, without the v (must equal plugin.json's version)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+    # A called workflow can't ask for more than its caller grants.
+    permissions:
+      contents: read
+
+  release:
+    name: Commit the coverage report and tag v${{ inputs.version }}
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check the version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          manifest_version="$(jq -r .version plugin.json)"
+          if [ "$VERSION" != "$manifest_version" ]; then
+            echo "::error title=Version mismatch::You entered $VERSION but plugin.json says $manifest_version. Bump plugin.json first."
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; then
+            echo "::error title=Tag exists::v$VERSION is already released."
+            exit 1
+          fi
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: coverage-summary
+          path: release
+      # The validator reads release/coverage-summary.json from the tagged
+      # commit, so commit it first and tag that commit.
+      - name: Commit the report and tag
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add release/coverage-summary.json
+          # An unchanged report has nothing to commit; tag the checked-out
+          # commit, which already holds it.
+          if ! git diff --cached --quiet; then
+            git commit -m "release: v$VERSION coverage report"
+          fi
+          git tag "v$VERSION"
+          git push origin HEAD "v$VERSION"
